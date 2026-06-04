@@ -1,0 +1,2 @@
+-- Auth users should be created through Supabase Auth so profile triggers execute.
+-- This file intentionally contains no credentials or production data.

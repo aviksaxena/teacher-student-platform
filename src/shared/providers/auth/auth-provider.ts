@@ -1,0 +1,1 @@
+import type { Role } from "@/shared/domain/types";export interface AuthUser{id:string;email:string}export interface AuthProvider{currentUser():Promise<AuthUser|null>;sendMagicLink(email:string,redirectTo:string,metadata?:{role?:Role}):Promise<void>;signOut():Promise<void>}

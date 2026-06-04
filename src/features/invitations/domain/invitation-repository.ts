@@ -1,0 +1,1 @@
+import type{Invitation}from"@/shared/domain/types";export interface InvitationRepository{list():Promise<Invitation[]>;findByToken(token:string):Promise<Invitation|null>;create(email:string,expiresAt:string):Promise<Invitation>;revoke(id:string):Promise<void>;accept(token:string):Promise<void>}
