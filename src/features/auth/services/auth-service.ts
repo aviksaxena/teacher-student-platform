@@ -1,0 +1,2 @@
+import type{AuthProvider}from"@/shared/providers/auth/auth-provider";import type{Role}from"@/shared/domain/types";import{env}from"@/shared/lib/env";
+export class AuthService{constructor(private auth:AuthProvider){}async requestLogin(email:string,role:Role,next="/dashboard"){const url=new URL("/auth/callback",env().NEXT_PUBLIC_APP_URL);url.searchParams.set("next",next);url.searchParams.set("role",role);await this.auth.sendMagicLink(email,url.toString(),{role})}}

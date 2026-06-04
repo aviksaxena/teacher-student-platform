@@ -1,0 +1,7 @@
+"use server";
+import{redirect}from"next/navigation";import{revalidatePath}from"next/cache";import{z}from"zod";import{container}from"@/shared/lib/container";import{AuthService}from"@/features/auth/services/auth-service";import{InvitationService}from"@/features/invitations/services/invitation-service";import{assertSameOrigin,rateLimit}from"@/shared/lib/security";
+export async function requestMagicLink(form:FormData){await assertSameOrigin();await rateLimit("login");const email=z.string().email().parse(form.get("email"));const role=z.enum(["teacher","student"]).parse(form.get("role")??"teacher");const next=z.string().startsWith("/").parse(form.get("next")??"/dashboard");await new AuthService(container.auth()).requestLogin(email,role,next);redirect(`/auth/confirm?email=${encodeURIComponent(email)}`)}
+export async function createInvite(form:FormData){await assertSameOrigin();await rateLimit("invite",10);await new InvitationService(container.invitations(),container.email()).create(String(form.get("email")));revalidatePath("/dashboard/teacher")}
+export async function revokeInvite(form:FormData){await assertSameOrigin();await container.invitations().revoke(z.string().uuid().parse(form.get("id")));revalidatePath("/dashboard/teacher")}
+export async function removeStudent(form:FormData){await assertSameOrigin();await container.students().remove(z.string().uuid().parse(form.get("id")));revalidatePath("/dashboard/teacher")}
+export async function signOut(){await container.auth().signOut();redirect("/")}
